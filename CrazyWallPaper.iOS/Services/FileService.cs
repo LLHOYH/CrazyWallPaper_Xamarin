@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CrazyWallPaper.iOS.Services;
 using CrazyWallPaper.Services;
 using Foundation;
+using Photos;
 using UIKit;
 using Xamarin.Forms;
 
@@ -17,15 +18,30 @@ namespace CrazyWallPaper.iOS.Services
         public void SaveImageFromByte(byte[] imageByte, string fileName)
         {
             var imageData = new UIImage(NSData.FromArray(imageByte));
-            imageData.SaveToPhotosAlbum((image, error) =>
+
+            PHPhotoLibrary.RequestAuthorization(status =>
             {
-                //you can retrieve the saved UI Image as well if needed using  
-                //var i = image as UIImage;  
-                if (error != null)
+                switch (status)
                 {
-                    Console.WriteLine(error.ToString());
+                    case PHAuthorizationStatus.Restricted:
+                    case PHAuthorizationStatus.Denied:
+                        // nope you don't have permission
+                        break;
+                    case PHAuthorizationStatus.Authorized:
+
+                        imageData.SaveToPhotosAlbum((image, error) =>
+                        {
+                            //you can retrieve the saved UI Image as well if needed using  
+                            //var i = image as UIImage;  
+                            if (error != null)
+                            {
+                                Console.WriteLine(error.ToString());
+                            }
+                        });
+                        break;
                 }
             });
+
         }
 
         public void SavePicture(string name, Stream data, string location = "temp")
