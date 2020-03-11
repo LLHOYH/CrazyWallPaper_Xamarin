@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CrazyWallPaper.Views.WallPaperDetailsPage"
+             xmlns:viewModels="clr-namespace:CrazyWallPaper.ViewModels">
+    <ContentPage.BindingContext>
+        <viewModels:WallPaperDetailsViewModel/>
+    </ContentPage.BindingContext>
+    <StackLayout HorizontalOptions="FillAndExpand"
+                 VerticalOptions="FillAndExpand">
+
+            <Image Source="{Binding ImgUrl}"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="StartAndExpand"
+                   
+                   Aspect="AspectFit"
+                   Scale="1"
+               />
+
+            <Button Text="Download"
+                    HorizontalOptions="EndAndExpand"
+                    VerticalOptions="StartAndExpand"
+                    Command="{Binding DownloadCommand}"
+                    />
+
+    </StackLayout>
+
+</ContentPage>
