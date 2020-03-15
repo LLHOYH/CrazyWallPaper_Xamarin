@@ -10,12 +10,17 @@ using Android.Content;
 using System.Threading.Tasks;
 using System.IO;
 using Plugin.CurrentActivity;
+using Android.Support.V4.App;
 
 namespace CrazyWallPaper.Droid
 {
     [Activity(Label = "CrazyWallPaper", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+
+
+
+
 
         //internal static MainActivity Instance { get; private set; }
 
@@ -25,13 +30,25 @@ namespace CrazyWallPaper.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-
+            AskPermission(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             LoadApplication(new App());
 
             //Instance = this;
+        }
+
+        public void AskPermission(Activity activity)
+        {
+            string[] Permission =
+        {
+            Android.Manifest.Permission.ReadExternalStorage,
+            Android.Manifest.Permission.WriteExternalStorage
+        };
+
+            int RequestID = 1;
+            ActivityCompat.RequestPermissions(activity, Permission, RequestID);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

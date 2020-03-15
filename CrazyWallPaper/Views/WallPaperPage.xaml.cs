@@ -27,6 +27,7 @@ namespace CrazyWallPaper.Views
             Result selectedWallPaper = (e.CurrentSelection[0] as Result);
             var wallpaperDetailsVM = new WallPaperDetailsViewModel
             {
+                ImgID = selectedWallPaper?.id,
                 ImgUrl = selectedWallPaper?.urls.regular
             };
 

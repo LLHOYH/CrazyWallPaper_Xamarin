@@ -34,7 +34,9 @@
 	<string>CrazyWallPaper</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Write to Photo Library Permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Picture Picker uses photo library</string>
+	<string>Open Photo Library Permission</string>
 </dict>
 </plist>

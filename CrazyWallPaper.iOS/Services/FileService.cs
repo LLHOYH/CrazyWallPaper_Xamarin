@@ -15,19 +15,19 @@ namespace CrazyWallPaper.iOS.Services
     public class FileService : IFileService
     {
 
-        public void SaveImageFromByte(byte[] imageByte, string fileName)
+        public void SaveImageFromByteAsync(byte[] imageByte, string fileName)
         {
             var imageData = new UIImage(NSData.FromArray(imageByte));
 
-            PHPhotoLibrary.RequestAuthorization(status =>
-            {
-                switch (status)
-                {
-                    case PHAuthorizationStatus.Restricted:
-                    case PHAuthorizationStatus.Denied:
-                        // nope you don't have permission
-                        break;
-                    case PHAuthorizationStatus.Authorized:
+            //PHPhotoLibrary.RequestAuthorization(status =>
+            //{
+            //    switch (status)
+            //    {
+            //        case PHAuthorizationStatus.Restricted:
+            //        case PHAuthorizationStatus.Denied:
+            //            // nope you don't have permission
+            //            break;
+            //        case PHAuthorizationStatus.Authorized:
 
                         imageData.SaveToPhotosAlbum((image, error) =>
                         {
@@ -38,101 +38,84 @@ namespace CrazyWallPaper.iOS.Services
                                 Console.WriteLine(error.ToString());
                             }
                         });
-                        break;
-                }
-            });
+                        //break;
+            //    }
+            //});
 
         }
 
-        public void SavePicture(string name, Stream data, string location = "temp")
-        {
-            var documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string imageFilename = Path.Combine(documentsPath, "Images", location);
-            Directory.CreateDirectory(imageFilename);
-
-            string filePath = Path.Combine(documentsPath, name);
-
-            byte[] bArray = new byte[data.Length];
-            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
-            {
-                using (data)
-                {
-                    data.Read(bArray, 0, (int)data.Length);
-                }
-                int length = bArray.Length;
-                fs.Write(bArray, 0, length);
-            }
-        }
 
 
-        TaskCompletionSource<Stream> taskCompletionSource;
-        UIImagePickerController imagePicker;
+        //select image from photo library
 
-        public Task<Stream> GetImageStreamAsync()
-        {
-            // Create and define UIImagePickerController
-            imagePicker = new UIImagePickerController
-            {
-                SourceType = UIImagePickerControllerSourceType.PhotoLibrary,
-                MediaTypes = UIImagePickerController.AvailableMediaTypes(UIImagePickerControllerSourceType.PhotoLibrary)
-            };
+        //TaskCompletionSource<Stream> taskCompletionSource;
+        //UIImagePickerController imagePicker;
 
-            // Set event handlers
-            imagePicker.FinishedPickingMedia += OnImagePickerFinishedPickingMedia;
-            imagePicker.Canceled += OnImagePickerCancelled;
+        //public Task<Stream> GetImageStreamAsync()
+        //{
+        //    // Create and define UIImagePickerController
+        //    imagePicker = new UIImagePickerController
+        //    {
+        //        SourceType = UIImagePickerControllerSourceType.PhotoLibrary,
+        //        MediaTypes = UIImagePickerController.AvailableMediaTypes(UIImagePickerControllerSourceType.PhotoLibrary)
+        //    };
 
-            // Present UIImagePickerController;
-            UIWindow window = UIApplication.SharedApplication.KeyWindow;
-            var viewController = window.RootViewController;
-            viewController.PresentModalViewController(imagePicker, true);
+        //    // Set event handlers
+        //    imagePicker.FinishedPickingMedia += OnImagePickerFinishedPickingMedia;
+        //    imagePicker.Canceled += OnImagePickerCancelled;
 
-            // Return Task object
-            taskCompletionSource = new TaskCompletionSource<Stream>();
-            return taskCompletionSource.Task;
-        }
+        //    // Present UIImagePickerController;
+        //    UIWindow window = UIApplication.SharedApplication.KeyWindow;
+        //    var viewController = window.RootViewController;
+        //    viewController.PresentModalViewController(imagePicker, true);
 
-        void OnImagePickerFinishedPickingMedia(object sender, UIImagePickerMediaPickedEventArgs args)
-        {
-            UIImage image = args.EditedImage ?? args.OriginalImage;
+        //    // Return Task object
+        //    taskCompletionSource = new TaskCompletionSource<Stream>();
+        //    return taskCompletionSource.Task;
+        //}
 
-            if (image != null)
-            {
-                // Convert UIImage to .NET Stream object
-                NSData data;
-                if (args.ReferenceUrl.PathExtension.Equals("PNG") || args.ReferenceUrl.PathExtension.Equals("png"))
-                {
-                    data = image.AsPNG();
-                }
-                else
-                {
-                    data = image.AsJPEG(1);
-                }
-                Stream stream = data.AsStream();
+        //void OnImagePickerFinishedPickingMedia(object sender, UIImagePickerMediaPickedEventArgs args)
+        //{
+        //    UIImage image = args.EditedImage ?? args.OriginalImage;
 
-                UnregisterEventHandlers();
+        //    if (image != null)
+        //    {
+        //        // Convert UIImage to .NET Stream object
+        //        NSData data;
+        //        if (args.ReferenceUrl.PathExtension.Equals("PNG") || args.ReferenceUrl.PathExtension.Equals("png"))
+        //        {
+        //            data = image.AsPNG();
+        //        }
+        //        else
+        //        {
+        //            data = image.AsJPEG(1);
+        //        }
+        //        Stream stream = data.AsStream();
 
-                // Set the Stream as the completion of the Task
-                taskCompletionSource.SetResult(stream);
-            }
-            else
-            {
-                UnregisterEventHandlers();
-                taskCompletionSource.SetResult(null);
-            }
-            imagePicker.DismissModalViewController(true);
-        }
+        //        UnregisterEventHandlers();
 
-        void OnImagePickerCancelled(object sender, EventArgs args)
-        {
-            UnregisterEventHandlers();
-            taskCompletionSource.SetResult(null);
-            imagePicker.DismissModalViewController(true);
-        }
+        //        // Set the Stream as the completion of the Task
+        //        taskCompletionSource.SetResult(stream);
+        //    }
+        //    else
+        //    {
+        //        UnregisterEventHandlers();
+        //        taskCompletionSource.SetResult(null);
+        //    }
+        //    imagePicker.DismissModalViewController(true);
+        //}
 
-        void UnregisterEventHandlers()
-        {
-            imagePicker.FinishedPickingMedia -= OnImagePickerFinishedPickingMedia;
-            imagePicker.Canceled -= OnImagePickerCancelled;
-        }
+        //void OnImagePickerCancelled(object sender, EventArgs args)
+        //{
+        //    UnregisterEventHandlers();
+        //    taskCompletionSource.SetResult(null);
+        //    imagePicker.DismissModalViewController(true);
+        //}
+
+        //void UnregisterEventHandlers()
+        //{
+        //    imagePicker.FinishedPickingMedia -= OnImagePickerFinishedPickingMedia;
+        //    imagePicker.Canceled -= OnImagePickerCancelled;
+        //}
     }
 }

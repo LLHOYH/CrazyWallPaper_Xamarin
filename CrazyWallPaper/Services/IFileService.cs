@@ -9,8 +9,6 @@ namespace CrazyWallPaper.Services
 
         //Task<Stream> GetImageStreamAsync();
 
-        void SavePicture(string name, Stream data, string location = "temp");
-
         void SaveImageFromByte(byte[] imageByte, string filename);
     }
 }
