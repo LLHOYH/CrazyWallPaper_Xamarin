@@ -31,9 +31,14 @@ namespace CrazyWallPaper.Droid
 
             base.OnCreate(savedInstanceState);
             AskPermission(this);
+            Stormlion.PhotoBrowser.Droid.Platform.Init(this);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
+
+            this.Window.AddFlags(WindowManagerFlags.Fullscreen);
+            this.Window.ClearFlags(WindowManagerFlags.ForceNotFullscreen);
+
             LoadApplication(new App());
 
             //Instance = this;

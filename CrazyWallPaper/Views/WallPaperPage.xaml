@@ -2,9 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:CrazyWallPaper.ViewModels"
+             xmlns:local="clr-namespace:CrazyWallPaper.Views.CustomRenderers"
              x:Class="CrazyWallPaper.Views.WallPaperPage">
 
-
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0,35,0,0" />
+        </OnPlatform>
+    </ContentPage.Padding>
 
     <StackLayout HorizontalOptions="FillAndExpand"
                  VerticalOptions="FillAndExpand"
@@ -16,6 +21,7 @@
                 <ColumnDefinition Width="30*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -29,31 +35,56 @@
                     TextColor="White"
                     Grid.Row="0" Grid.Column="1"/>
 
-            <CollectionView x:Name="cv_WallPapers"
-                            ItemsSource="{Binding Results, Mode=TwoWay}"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand"
-                            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                            SelectionMode="Single"
-                            SelectionChanged="cv_WallPapers_SelectionChanged"
-                            >
+
+
+            <ScrollView x:Name="sv_ColorCat"
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Margin="0,10,0,0"
+                        Orientation="Horizontal"
+                        VerticalOptions="FillAndExpand"
+                        HorizontalScrollBarVisibility="Never">
+
+                <StackLayout x:Name="sl_ColorCat"
+                             Orientation="Horizontal"
+                             VerticalOptions="FillAndExpand"
+                             Spacing="1">
+
+                </StackLayout>
+            </ScrollView>
+
+            <local:FillSpacesCollectionView x:Name="cv_WallPapers"
+                                            ItemsSource="{Binding Results, Mode=TwoWay}"
+                                            Margin="0,10,0,0"
+                                            HorizontalOptions="FillAndExpand"
+                                            VerticalOptions="FillAndExpand"
+                                            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                            SelectionMode="Single"
+                                            SelectionChanged="cv_WallPapers_SelectionChanged"
+                                            ItemSizingStrategy="MeasureAllItems"
+                                            >
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"/>
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2"
+                                     VerticalItemSpacing="5"
+                                     HorizontalItemSpacing="5"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-                        <StackLayout Padding="0,5,0,5" >
+                        <Frame Padding="1"
+                               BorderColor="#c2c2d6"
+                               BackgroundColor="#c2c2d6"
+                               CornerRadius="10"
+                               HasShadow="False"
+                               >
                             <Image Source="{Binding urls.regular}"
-                                   HorizontalOptions="FillAndExpand"
+                                   Aspect="AspectFit"
                                    />
-                            <Label IsVisible="false"
-                                   Text="{Binding id}"
-                                   WidthRequest="0" HeightRequest="0"/>
-                        </StackLayout>
+                        </Frame>
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-            </CollectionView>
+            </local:FillSpacesCollectionView>
         </Grid>
     </StackLayout>
 

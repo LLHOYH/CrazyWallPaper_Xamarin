@@ -19,6 +19,7 @@ namespace CrazyWallPaper.Models
         public string regular { get; set; }
         public string small { get; set; }
         public string thumb { get; set; }
+        public string custom { get; set; }
     }
 
     public class ProfileImage

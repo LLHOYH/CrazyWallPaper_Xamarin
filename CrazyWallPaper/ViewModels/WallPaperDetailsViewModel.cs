@@ -18,7 +18,7 @@ namespace CrazyWallPaper.ViewModels
 
         public WallPaperDetailsViewModel()
         {
-            DownloadCommand = new Command(DownloadImage);
+
         }
 
         public string ImgUrl
@@ -33,10 +33,23 @@ namespace CrazyWallPaper.ViewModels
             set { SetProperty(ref imgID, value); }
         }
 
+        Command goBackCommand;
+        public Command GoBackCommand
+        {
+            get
+            {
+                return goBackCommand ?? (goBackCommand = new Command(CloseCurrentPage));
+            }
+            set { SetProperty(ref goBackCommand, value); }
+        }
+
         Command downloadCommand;
         public Command DownloadCommand
         {
-            get { return downloadCommand; }
+            get
+            {
+                return downloadCommand ?? (downloadCommand = new Command(DownloadImage));
+            }
             set { SetProperty(ref downloadCommand, value); }
         }
 
@@ -47,8 +60,13 @@ namespace CrazyWallPaper.ViewModels
             WebClient wc = new WebClient();
             byte[] byteArr = wc.DownloadData(ImgUrl);
 
-            fileSvc.SaveImageFromByte(byteArr, ImgID + ".png");
+            fileSvc.SaveImageFromByte(byteArr, ImgID + "-" + DateTime.Now.ToString() + ".png");
 
+        }
+
+        public void CloseCurrentPage()
+        {
+            
         }
     }
 }

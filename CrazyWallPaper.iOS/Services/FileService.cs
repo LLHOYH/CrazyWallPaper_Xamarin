@@ -15,19 +15,20 @@ namespace CrazyWallPaper.iOS.Services
     public class FileService : IFileService
     {
 
-        public void SaveImageFromByteAsync(byte[] imageByte, string fileName)
+        public void SaveImageFromByte(byte[] imageByte, string fileName)
         {
             var imageData = new UIImage(NSData.FromArray(imageByte));
 
-            //PHPhotoLibrary.RequestAuthorization(status =>
-            //{
-            //    switch (status)
-            //    {
-            //        case PHAuthorizationStatus.Restricted:
-            //        case PHAuthorizationStatus.Denied:
-            //            // nope you don't have permission
-            //            break;
-            //        case PHAuthorizationStatus.Authorized:
+            PHPhotoLibrary.RequestAuthorization(status =>
+            {
+
+                switch (status)
+                {
+                    case PHAuthorizationStatus.Restricted:
+                    case PHAuthorizationStatus.Denied:
+                        // nope you don't have permission
+                        break;
+                    case PHAuthorizationStatus.Authorized:
 
                         imageData.SaveToPhotosAlbum((image, error) =>
                         {
@@ -38,9 +39,9 @@ namespace CrazyWallPaper.iOS.Services
                                 Console.WriteLine(error.ToString());
                             }
                         });
-                        //break;
-            //    }
-            //});
+            break;
+        }
+    });
 
         }
 

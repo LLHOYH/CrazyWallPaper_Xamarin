@@ -2,26 +2,46 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CrazyWallPaper.Views.WallPaperDetailsPage"
+             xmlns:local="clr-namespace:CrazyWallPaper.Views.CustomRenderers"
              xmlns:viewModels="clr-namespace:CrazyWallPaper.ViewModels">
     <ContentPage.BindingContext>
         <viewModels:WallPaperDetailsViewModel/>
     </ContentPage.BindingContext>
+
+
     <StackLayout HorizontalOptions="FillAndExpand"
-                 VerticalOptions="FillAndExpand">
+                 VerticalOptions="FillAndExpand"
+                 BackgroundColor="Black"
+                 >
 
-            <Image Source="{Binding ImgUrl}"
-               HorizontalOptions="FillAndExpand"
-               VerticalOptions="StartAndExpand"
-                   
-                   Aspect="AspectFit"
-                   Scale="1"
-               />
+        <StackLayout.GestureRecognizers>
+            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"
+                                  NumberOfTapsRequired="1"/>
+            
+        </StackLayout.GestureRecognizers>
 
-            <Button Text="Download"
-                    HorizontalOptions="EndAndExpand"
-                    VerticalOptions="StartAndExpand"
-                    Command="{Binding DownloadCommand}"
-                    />
+        <!--<local:PinchToZoomContainer
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+            <local:PinchToZoomContainer.Content>
+                <Image Source="{Binding ImgUrl}"
+                       Aspect="AspectFit"/>
+            </local:PinchToZoomContainer.Content>
+        </local:PinchToZoomContainer>-->
+
+
+
+        <!-- The Font Family is loaded at code behind-->
+        <Button x:Name="btn_Download"
+                Text="&#xf019;"
+                TextColor="White"
+                FontSize="Large"
+                BackgroundColor="Transparent"
+                WidthRequest="60"
+                HeightRequest="60"
+                CornerRadius="30"
+                HorizontalOptions="EndAndExpand"
+                Command="{Binding DownloadCommand}"/>
 
     </StackLayout>
 

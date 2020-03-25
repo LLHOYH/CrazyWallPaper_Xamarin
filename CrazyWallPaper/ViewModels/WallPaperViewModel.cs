@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
+using CrazyWallPaper.EnumObjects;
 using CrazyWallPaper.Models;
 using Newtonsoft.Json;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace CrazyWallPaper.ViewModels
@@ -12,13 +15,33 @@ namespace CrazyWallPaper.ViewModels
     {
         private readonly string apiKey = "untxjeopIOEWhcjrYaxJHUPw5cXVusW6sWJ2kW8w3l8";
         private readonly string apiPath = "https://api.unsplash.com/";
+        private readonly string imgOritention = "squarish";
         public WallPaperViewModel()
         {
             WallPapers = new WallPaper();
             Results = new ObservableCollection<Result>();
+            ColorCategory = new List<ColorCategories>();
             WallPapersBindingCommand = new Command(BindWallPapers);
+            BindColorCategories();
             BindWallPapers();
         }
+
+
+
+
+        public class ColorCategories
+        {
+            public ColorCategories(string colorName)
+            {
+
+                ColorName = colorName;
+            }
+
+            public string ColorName { get; set; }
+
+        }
+
+
 
         WallPaper wallPapers;
         public WallPaper WallPapers
@@ -32,6 +55,13 @@ namespace CrazyWallPaper.ViewModels
         {
             get { return results; }
             set { SetProperty(ref results, value); }
+        }
+
+        List<ColorCategories> colorCategory;
+        public List<ColorCategories> ColorCategory
+        {
+            get { return colorCategory; }
+            set { SetProperty(ref colorCategory, value); }
         }
 
         string searchQuery;
@@ -50,15 +80,33 @@ namespace CrazyWallPaper.ViewModels
 
         string fullUri;
 
+        public void BindColorCategories()
+        {
+            List<string> colorNames = new List<string>();
+
+            colorNames = Enum.GetNames(typeof(ColorCategoryEnums)).Cast<string>().ToList();
+
+            foreach(string colorName in colorNames)
+            {
+                ColorCategory.Add(new ColorCategories(colorName));
+            }
+        }
 
         public async void BindWallPapers()
         {
+            var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            var width = int.Parse(mainDisplayInfo.Width.ToString());
+            var height = int.Parse(mainDisplayInfo.Height.ToString());
+
+
             HttpClient _client = new HttpClient();
+            ObservableCollection<Result> resultsCustom = new ObservableCollection<Result>();
+            //fullUri = apiPath + "photos?client_id=" + apiKey + "&per_page=30"+ "&w=" + (width / 2).ToString() + "&h=" + (height / 2).ToString() + "&dpi=2";
+            fullUri = apiPath + "photos?client_id=" + apiKey + "&orientation=" + imgOritention + "&per_page=10";
+
 
             if (string.IsNullOrEmpty(SearchQuery))
             {
-                fullUri = apiPath + "photos?client_id=" + apiKey + "&per_page=30";
-
                 var uri = new Uri(fullUri);
                 var response = await _client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
@@ -70,7 +118,7 @@ namespace CrazyWallPaper.ViewModels
             }
             else if (!string.IsNullOrEmpty(SearchQuery))
             {
-                fullUri = apiPath + "search/photos?client_id=" + apiKey + "&query=" + SearchQuery + "&per_page=30";
+                fullUri += "&query=" + SearchQuery;
 
                 var uri = new Uri(fullUri);
                 var response = await _client.GetAsync(uri);
@@ -82,6 +130,9 @@ namespace CrazyWallPaper.ViewModels
                         Results = wallPapers.results;
                 }
             }
+
+            
+
         }
     }
 }

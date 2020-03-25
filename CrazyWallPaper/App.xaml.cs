@@ -12,7 +12,7 @@ namespace CrazyWallPaper
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new WallPaperPage();
         }
 
         protected override void OnStart()

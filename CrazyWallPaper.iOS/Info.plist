@@ -38,5 +38,13 @@
 	<string>Write to Photo Library Permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Open Photo Library Permission</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>fa-solid-900.ttf</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>
